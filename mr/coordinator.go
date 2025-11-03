@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"net/rpc"
 	"os"
-	"sync"
+	"sync/atomic"
 	"time"
 )
 
-const TIMEOUT = time.Second * 5
+const TIMEOUT = time.Second * 10
 
 type TaskStatus int
 
@@ -20,158 +20,154 @@ const (
 	T_FINISHED
 )
 
-type Task struct {
-	status  TaskStatus
-	timeout time.Time
+type TaskInfo struct {
+	taskReply AskTaskReply
+	timer     *time.Timer
 }
 
 type CoordinatorStatus int
 
 const (
-	C_READY CoordinatorStatus = iota
-	C_MAPPING
+	C_MAPPING CoordinatorStatus = iota
 	C_REDUCING
 	C_FINISHED
 )
 
 type Coordinator struct {
 	// Your definitions here.
-	taskMutex sync.Mutex
 
-	mapTasks []Task
-	nMap     int
+	// Tasks only need to be tracked in coordinator main loop
+	nMap        int
+	mapTasks    []TaskStatus
+	mapFinished int
 
-	reduceTasks []Task
-	nReduce     int
+	nReduce        int
+	reduceTasks    []TaskStatus
+	reduceFinished int
 
 	filenames []string
 
-	statusMutex sync.Mutex
-	status      CoordinatorStatus
+	status CoordinatorStatus
+
+	// var may need concurrent access
+	done atomic.Bool
+
+	taskChan    chan TaskInfo
+	finishChan  chan FinishTaskArgs
+	timeoutChan chan TaskInfo
 }
 
-func (c *Coordinator) checkTimeoutTask() {
-	for !c.Done() {
-		c.statusMutex.Lock()
-
-		switch c.status {
-		case C_MAPPING:
-			c.taskMutex.Lock()
-
-			for i := 0; i < c.nMap; i++ {
-				if c.mapTasks[i].status == T_PROCESSING &&
-					time.Now().After(c.mapTasks[i].timeout) {
-					log.Printf("map task %v timed out, resetting to T_READY", i)
-					c.mapTasks[i].status = T_READY
-				}
+func (c *Coordinator) handleFinishArg() {
+	select {
+	case finishArg := <-c.finishChan:
+		switch finishArg.TaskType {
+		case TT_MAP:
+			if c.mapTasks[finishArg.TaskId] != T_FINISHED {
+				c.mapFinished++
 			}
-			c.taskMutex.Unlock()
-
-		case C_REDUCING:
-			c.taskMutex.Lock()
-
-			for i := 0; i < c.nReduce; i++ {
-				if c.reduceTasks[i].status == T_PROCESSING &&
-					time.Now().After(c.reduceTasks[i].timeout) {
-					log.Printf("reduce task %v timed out, resetting to T_READY", i)
-					c.reduceTasks[i].status = T_READY
-				}
+			c.mapTasks[finishArg.TaskId] = T_FINISHED
+		case TT_REDUCE:
+			if c.reduceTasks[finishArg.TaskId] != T_FINISHED {
+				c.reduceFinished++
 			}
-			c.taskMutex.Unlock()
-
+			c.reduceTasks[finishArg.TaskId] = T_FINISHED
 		}
-		c.statusMutex.Unlock()
-		time.Sleep(time.Second)
+	case taskInfo := <-c.timeoutChan:
+		switch taskInfo.taskReply.TaskType {
+		case TT_MAP:
+			if c.mapTasks[taskInfo.taskReply.TaskId] != T_FINISHED {
+				c.mapTasks[taskInfo.taskReply.TaskId] = T_READY
+				c.taskChan <- taskInfo
+			}
+		case TT_REDUCE:
+			if c.reduceTasks[taskInfo.taskReply.TaskId] != T_FINISHED {
+				c.reduceTasks[taskInfo.taskReply.TaskId] = T_READY
+				c.taskChan <- taskInfo
+			}
+		}
+	default:
+		return
+	}
+}
+
+func (c *Coordinator) handleStateChange() {
+	// finish := true
+	switch c.status {
+	case C_MAPPING:
+		// for i := range c.nMap {
+		// 	if c.mapTasks[i] != T_FINISHED {
+		// 		finish = false
+		// 		break
+		// 	}
+		// }
+		finish := (c.nMap == c.mapFinished)
+		if finish {
+			// add all reduce task to taskchan
+			for i := range c.nReduce {
+				c.taskChan <- TaskInfo{
+					taskReply: AskTaskReply{
+						NMap:     c.nMap,
+						NReduce:  c.nReduce,
+						TaskId:   i,
+						TaskType: TT_REDUCE,
+					},
+					timer: nil,
+				}
+			}
+			c.status = C_REDUCING
+		}
+	case C_REDUCING:
+
+		// for i := range c.nReduce {
+		// 	if c.reduceTasks[i] != T_FINISHED {
+		// 		finish = false
+		// 		break
+		// 	}
+		// }
+		finish := (c.nReduce == c.reduceFinished)
+		if finish {
+			// change state and done
+			c.status = C_FINISHED
+			c.done.Store(true)
+		}
+	}
+}
+
+func (c *Coordinator) mainLoop() {
+	c.status = C_MAPPING
+
+	for !c.Done() {
+		// handle finish args
+		c.handleFinishArg()
+		c.handleStateChange()
 	}
 }
 
 // Your code here -- RPC handlers for the worker to call.
 func (c *Coordinator) AskTask(_ *AskTaskArgs, reply *AskTaskReply) error {
-	c.statusMutex.Lock()
-	defer c.statusMutex.Unlock()
+	select {
+	case taskInfo := <-c.taskChan:
+		*reply = taskInfo.taskReply
+		taskInfo.timer = time.NewTimer(TIMEOUT)
+		go func(taskInfo TaskInfo, t *time.Timer) {
+			<-t.C
+			// log.Printf("Task %v of type %v timed out", taskId, taskType)
+			// c.timeoutChan <- taskInfo
+			c.timeoutChan <- taskInfo
+		}(taskInfo, taskInfo.timer)
 
-	reply.TaskType = TT_IDLE
-	reply.NMap = c.nMap
-	reply.NReduce = c.nReduce
-
-	switch c.status {
-	case C_MAPPING:
-		c.taskMutex.Lock()
-		for i := 0; i < c.nMap; i++ {
-			if c.mapTasks[i].status == T_READY { // assign task
-				c.mapTasks[i].status = T_PROCESSING
-				c.mapTasks[i].timeout = time.Now().Add(TIMEOUT)
-
-				reply.TaskType = TT_MAP
-				reply.Filename = c.filenames[i]
-				reply.TaskId = i
-				break
-			}
+	default:
+		if c.done.Load() {
+			reply.TaskType = TT_EXIT
+		} else {
+			reply.TaskType = TT_IDLE
 		}
-		c.taskMutex.Unlock()
-	case C_REDUCING:
-		c.taskMutex.Lock()
-		for i := 0; i < c.nReduce; i++ {
-			if c.reduceTasks[i].status == T_READY { // assign task
-				c.reduceTasks[i].status = T_PROCESSING
-				c.reduceTasks[i].timeout = time.Now().Add(TIMEOUT)
-
-				reply.TaskType = TT_REDUCE
-				reply.TaskId = i
-				break
-			}
-		}
-		c.taskMutex.Unlock()
-	case C_FINISHED:
-		reply.TaskType = TT_EXIT
 	}
 	return nil
 }
 func (c *Coordinator) FinishTask(args *FinishTaskArgs, _ *FinishTaskReply) error {
 	// traverse to mark task finish
-	c.statusMutex.Lock()
-	defer c.statusMutex.Unlock()
-	// log.Printf("Coordinator received FinishTask for taskId %v of type %v", args.TaskId, args.TaskType)
-	taskId, taskType := args.TaskId, args.TaskType
-	taskFinished := true
-	switch c.status {
-	case C_MAPPING:
-		if taskType != TT_MAP {
-			break
-		}
-		c.taskMutex.Lock()
-		c.mapTasks[taskId].status = T_FINISHED
-
-		for i := 0; i < c.nMap; i++ {
-			if c.mapTasks[i].status != T_FINISHED {
-				taskFinished = false
-				// log.Printflog.Printf("Map task %v not finished yet", i)
-			}
-		}
-
-		c.taskMutex.Unlock()
-		if taskFinished {
-			c.status = C_REDUCING
-			// log.Printf("Coordinator status changed to C_REDUCING")
-		}
-	case C_REDUCING:
-		if taskType != TT_REDUCE {
-			break
-		}
-		c.taskMutex.Lock()
-		c.reduceTasks[taskId].status = T_FINISHED
-		for i := 0; i < c.nReduce; i++ {
-			if c.reduceTasks[i].status != T_FINISHED {
-				taskFinished = false
-			}
-		}
-		c.taskMutex.Unlock()
-		if taskFinished {
-			// log.Printf("Coordinator status changed to C_FINISHED")
-			c.status = C_FINISHED
-		}
-	}
-
+	c.finishChan <- (*args)
 	return nil
 }
 
@@ -203,10 +199,7 @@ func (c *Coordinator) Done() bool {
 	ret := false
 
 	// Your code here.
-	c.statusMutex.Lock()
-	defer c.statusMutex.Unlock()
-
-	ret = (c.status == C_FINISHED)
+	ret = c.done.Load()
 
 	return ret
 }
@@ -219,27 +212,43 @@ func MakeCoordinator(files []string, nReduce int) *Coordinator {
 
 	// Your code here.
 	// initialize mapTask and reduceTask slices
-	c.status = C_READY
-
+	log.Printf("initializing coordinator..")
 	c.nMap = len(files)
-	c.mapTasks = make([]Task, c.nMap)
-	for i := 0; i < c.nMap; i++ {
-		c.mapTasks[i].status = T_READY
+	c.nReduce = nReduce
+	// channel
+	c.taskChan = make(chan TaskInfo, c.nMap+c.nReduce)
+	c.finishChan = make(chan FinishTaskArgs, c.nMap+c.nReduce)
+	c.timeoutChan = make(chan TaskInfo, c.nMap+c.nReduce)
+
+	c.mapTasks = make([]TaskStatus, c.nMap)
+	log.Printf("map tasks slice created with size %v", c.nMap)
+	for i := range c.mapTasks {
+		c.mapTasks[i] = T_READY
+
+		c.taskChan <- TaskInfo{
+			taskReply: AskTaskReply{
+				Filename: files[i],
+				NMap:     c.nMap,
+				NReduce:  nReduce,
+				TaskId:   i,
+				TaskType: TT_MAP,
+			},
+			timer: nil,
+		}
+
+	}
+	log.Printf("map tasks initialized and added to task channel")
+	c.reduceTasks = make([]TaskStatus, nReduce)
+	for i := 0; i < c.nReduce; i++ {
+		c.reduceTasks[i] = T_READY
 	}
 
-	c.nReduce = nReduce
-	c.reduceTasks = make([]Task, nReduce)
-	for i := 0; i < c.nReduce; i++ {
-		c.reduceTasks[i].status = T_READY
-	}
+	c.mapFinished, c.reduceFinished = 0, 0
 
 	c.filenames = make([]string, c.nMap)
 	copy(c.filenames, files)
 
-	go c.checkTimeoutTask()
-	c.status = C_MAPPING
-	// log.Printf("Coordinator status changed to C_MAPPING")
-	// log.Printf("Coordinator initialized with %v map tasks and %v reduce tasks", c.nMap, c.nReduce)
+	go c.mainLoop()
 
 	c.server()
 	return &c
