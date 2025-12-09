@@ -1,0 +1,767 @@
+2025/12/08 16:39:01 Server 0 starts working...
+2025/12/08 16:39:01 Server 1 starts working...
+2025/12/08 16:39:01 Server 2 starts working...
+2025/12/08 16:39:01 Server 3 starts working...
+2025/12/08 16:39:01 Server 4 starts working...
+Test (3C): Figure 8 (unreliable) (unreliable network)...
+2025/12/08 16:39:01 Candidate 2 starts an election with term 1
+2025/12/08 16:39:01 Candidate 2's log: [{<nil> 0}]
+2025/12/08 16:39:01 3 find a higher term, change to FOLLOWER state
+2025/12/08 16:39:01 Follower 3's log: [{<nil> 0}]
+2025/12/08 16:39:01 lastLogTerm: Server 3: 0 VS Candidate 2: 0, result: false
+2025/12/08 16:39:01 lastLogIndex: Server 3: 0 VS Candidate 2: 0, result: false
+2025/12/08 16:39:01 Candidate 1 starts an election with term 1
+2025/12/08 16:39:01 Candidate 1's log: [{<nil> 0}]
+2025/12/08 16:39:01 Candidate 0 starts an election with term 1
+2025/12/08 16:39:01 Candidate 0's log: [{<nil> 0}]
+2025/12/08 16:39:01 4 find a higher term, change to FOLLOWER state
+2025/12/08 16:39:01 Follower 4's log: [{<nil> 0}]
+2025/12/08 16:39:01 lastLogTerm: Server 4: 0 VS Candidate 2: 0, result: false
+2025/12/08 16:39:01 lastLogIndex: Server 4: 0 VS Candidate 2: 0, result: false
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 1 to Follower 4
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 1 to Follower 0
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 1 to Follower 3
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 1 to Follower 1
+2025/12/08 16:39:01 Server 0 reject 1 for it has voted for 0
+2025/12/08 16:39:01 Follower 3 log before append: [{<nil> 0}], and about to append entries [] at prevlogindex = 0
+2025/12/08 16:39:01 Follower 3 log after append: [{<nil> 0}]
+2025/12/08 16:39:01 Follower 3 signal applier to work
+2025/12/08 16:39:01 Leader 2 check Follower 3 nextIndex = 1, matchIndex = 0, all matchIndex: [0 0 0 0 0]
+2025/12/08 16:39:01 Leader 2 signal applier to work
+2025/12/08 16:39:01 Server 2 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Server 3 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Server 0 reject 2 for it has voted for 0
+2025/12/08 16:39:01 Server 1 reject 0 for it has voted for 1
+2025/12/08 16:39:01 Server 3 reject 0 for it has voted for 2
+2025/12/08 16:39:01 Server 2 reject 1 for it has voted for 2
+2025/12/08 16:39:01 Follower 0 log before append: [{<nil> 0}], and about to append entries [] at prevlogindex = 0
+2025/12/08 16:39:01 Follower 0 log after append: [{<nil> 0}]
+2025/12/08 16:39:01 Follower 0 signal applier to work
+2025/12/08 16:39:01 Server 0 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Leader 2 check Follower 0 nextIndex = 1, matchIndex = 0, all matchIndex: [0 0 0 0 0]
+2025/12/08 16:39:01 Leader 2 signal applier to work
+2025/12/08 16:39:01 Server 2 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Server 1 reject 2 for it has voted for 1
+2025/12/08 16:39:01 Server 3 reject 1 for it has voted for 2
+2025/12/08 16:39:01 Server 4 reject 1 for it has voted for 2
+2025/12/08 16:39:01 Follower 4 log before append: [{<nil> 0}], and about to append entries [] at prevlogindex = 0
+2025/12/08 16:39:01 Follower 4 log after append: [{<nil> 0}]
+2025/12/08 16:39:01 Follower 4 signal applier to work
+2025/12/08 16:39:01 Server 4 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Follower 1 log before append: [{<nil> 0}], and about to append entries [] at prevlogindex = 0
+2025/12/08 16:39:01 Follower 1 log after append: [{<nil> 0}]
+2025/12/08 16:39:01 Follower 1 signal applier to work
+2025/12/08 16:39:01 Server 1 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Leader 2 check Follower 4 nextIndex = 1, matchIndex = 0, all matchIndex: [0 0 0 0 0]
+2025/12/08 16:39:01 Leader 2 signal applier to work
+2025/12/08 16:39:01 Server 2 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Server 2 reject 0 for it has voted for 2
+2025/12/08 16:39:01 Server 4 reject 0 for it has voted for 2
+2025/12/08 16:39:01 Leader 2 receive a command from client with index 1
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 2 to Follower 4
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 2 to Follower 3
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 2 to Follower 1
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 2 to Follower 0
+2025/12/08 16:39:01 Follower 0 log before append: [{<nil> 0}], and about to append entries [{927 1}] at prevlogindex = 0
+2025/12/08 16:39:01 Follower 0 log after append: [{<nil> 0} {927 1}]
+2025/12/08 16:39:01 Follower 0 signal applier to work
+2025/12/08 16:39:01 Server 0 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Leader 2 check Follower 0 nextIndex = 2, matchIndex = 1, all matchIndex: [1 0 1 0 0]
+2025/12/08 16:39:01 Leader 2 signal applier to work
+2025/12/08 16:39:01 Server 2 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Follower 1 log before append: [{<nil> 0}], and about to append entries [{927 1}] at prevlogindex = 0
+2025/12/08 16:39:01 Follower 1 log after append: [{<nil> 0} {927 1}]
+2025/12/08 16:39:01 Follower 1 signal applier to work
+2025/12/08 16:39:01 Server 1 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Follower 3 log before append: [{<nil> 0}], and about to append entries [{927 1}] at prevlogindex = 0
+2025/12/08 16:39:01 Follower 3 log after append: [{<nil> 0} {927 1}]
+2025/12/08 16:39:01 Follower 3 signal applier to work
+2025/12/08 16:39:01 Server 3 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Leader 2 check Follower 3 nextIndex = 2, matchIndex = 1, all matchIndex: [1 0 1 1 0]
+2025/12/08 16:39:01 Leader 2 advance commitIndex from 0 to 1, all matchIndex: [1 0 1 1 0]
+2025/12/08 16:39:01 Leader 2 signal applier to work
+2025/12/08 16:39:01 Server 2 wake up! wait for new log to apply from index 1 to 1
+2025/12/08 16:39:01 Server 2 begin to apply log from index 1 to 1
+2025/12/08 16:39:01 Server 2 apply message with index 1 and command {927 1}
+2025/12/08 16:39:01 Follower 4 log before append: [{<nil> 0}], and about to append entries [{927 1}] at prevlogindex = 0
+2025/12/08 16:39:01 Follower 4 log after append: [{<nil> 0} {927 1}]
+2025/12/08 16:39:01 Follower 4 signal applier to work
+2025/12/08 16:39:01 Leader 2 check Follower 4 nextIndex = 2, matchIndex = 1, all matchIndex: [1 0 1 1 1]
+2025/12/08 16:39:01 Leader 2 signal applier to work
+2025/12/08 16:39:01 Server 2 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:01 Server 4 wake up! wait for new log to apply from index 1 to 0
+2025/12/08 16:39:01 Leader 2 receive a command from client with index 2
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 3 to Follower 4
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 3 to Follower 0
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 3 to Follower 3
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 3 to Follower 1
+2025/12/08 16:39:01 Follower 4 log before append: [{<nil> 0} {927 1}], and about to append entries [{8917 1}] at prevlogindex = 1
+2025/12/08 16:39:01 Follower 4 log after append: [{<nil> 0} {927 1} {8917 1}]
+2025/12/08 16:39:01 Follower 4 signal applier to work
+2025/12/08 16:39:01 Server 4 wake up! wait for new log to apply from index 1 to 1
+2025/12/08 16:39:01 Server 4 begin to apply log from index 1 to 1
+2025/12/08 16:39:01 Server 4 apply message with index 1 and command {927 1}
+2025/12/08 16:39:01 Leader 2 check Follower 4 nextIndex = 3, matchIndex = 2, all matchIndex: [1 0 2 1 2]
+2025/12/08 16:39:01 Leader 2 signal applier to work
+2025/12/08 16:39:01 Server 2 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:01 Leader 2 receive a command from client with index 3
+2025/12/08 16:39:01 Leader 2 receive a command from client with index 4
+2025/12/08 16:39:01 Leader 2 send entries start = 3, end = 5 to Follower 4
+2025/12/08 16:39:01 Leader 2 send entries start = 3, end = 4 to Follower 4
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 4 to Follower 0
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 4 to Follower 1
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 4 to Follower 3
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 5 to Follower 1
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 5 to Follower 0
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 5 to Follower 3
+2025/12/08 16:39:01 Leader 2 receive a command from client with index 5
+2025/12/08 16:39:01 Leader 2 send entries start = 3, end = 6 to Follower 4
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 6 to Follower 1
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 6 to Follower 3
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 6 to Follower 0
+2025/12/08 16:39:01 Follower 0 log before append: [{<nil> 0} {927 1}], and about to append entries [{8917 1}] at prevlogindex = 1
+2025/12/08 16:39:01 Follower 0 log after append: [{<nil> 0} {927 1} {8917 1}]
+2025/12/08 16:39:01 Follower 0 signal applier to work
+2025/12/08 16:39:01 Server 0 wake up! wait for new log to apply from index 1 to 1
+2025/12/08 16:39:01 Server 0 begin to apply log from index 1 to 1
+2025/12/08 16:39:01 Server 0 apply message with index 1 and command {927 1}
+2025/12/08 16:39:01 Leader 2 receive a command from client with index 6
+2025/12/08 16:39:01 Leader 2 send entries start = 3, end = 7 to Follower 4
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 7 to Follower 1
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 7 to Follower 0
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 7 to Follower 3
+2025/12/08 16:39:01 Follower 3 log before append: [{<nil> 0} {927 1}], and about to append entries [{8917 1}] at prevlogindex = 1
+2025/12/08 16:39:01 Follower 3 log after append: [{<nil> 0} {927 1} {8917 1}]
+2025/12/08 16:39:01 Follower 3 signal applier to work
+2025/12/08 16:39:01 Server 3 wake up! wait for new log to apply from index 1 to 1
+2025/12/08 16:39:01 Server 3 begin to apply log from index 1 to 1
+2025/12/08 16:39:01 Server 3 apply message with index 1 and command {927 1}
+2025/12/08 16:39:01 Follower 1 log before append: [{<nil> 0} {927 1}], and about to append entries [{927 1} {8917 1}] at prevlogindex = 0
+2025/12/08 16:39:01 Follower 1 log after append: [{<nil> 0} {927 1} {8917 1}]
+2025/12/08 16:39:01 Follower 1 signal applier to work
+2025/12/08 16:39:01 Server 1 wake up! wait for new log to apply from index 1 to 1
+2025/12/08 16:39:01 Server 1 begin to apply log from index 1 to 1
+2025/12/08 16:39:01 Server 1 apply message with index 1 and command {927 1}
+2025/12/08 16:39:01 Leader 2 receive a command from client with index 7
+2025/12/08 16:39:01 Leader 2 send entries start = 3, end = 8 to Follower 4
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 8 to Follower 3
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 8 to Follower 1
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 8 to Follower 0
+2025/12/08 16:39:01 Leader 2 receive a command from client with index 8
+2025/12/08 16:39:01 Leader 2 send entries start = 3, end = 9 to Follower 4
+2025/12/08 16:39:01 Leader 2 send entries start = 1, end = 9 to Follower 1
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 9 to Follower 0
+2025/12/08 16:39:01 Leader 2 send entries start = 2, end = 9 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 9
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 10 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 10 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 10 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 10 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 10
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 11 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 11 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 11 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 11 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 11
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 12 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 12 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 12 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 12 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 12
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 13 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 13 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 13 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 13 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 13
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 14 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 14 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 14 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 14 to Follower 1
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 14
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 15
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 16 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 16 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 16 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 15 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 16 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 15 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 15 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 15 to Follower 1
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 16
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 17 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 17 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 17 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 17 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 17
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 18 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 18 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 18 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 18 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 18
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 19
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 19 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 20 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 20 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 20 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 20 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 19 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 19 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 19 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 20
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 21 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 21 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 21 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 21 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 21
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 22 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 22 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 22 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 22 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 22
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 23 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 23 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 23 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 23 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 23
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 24 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 24 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 24 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 24 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 24
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 25 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 25 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 25 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 25 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 25
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 26 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 26 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 26 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 26 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 26
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 27 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 27 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 27 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 27 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 27
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 28 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 28 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 28 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 28 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 28 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 28 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 28 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 28 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 28
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 29 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 29 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 29 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 29 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 29
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 30 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 30 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 30 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 30 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 30
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 31 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 31 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 31 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 31 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 31
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 32 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 32 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 32 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 32 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 32
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 33 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 33 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 33 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 33 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 33
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 34 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 34 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 34 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 34 to Follower 1
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 34
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 35 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 35 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 35 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 35 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 35
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 36 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 36 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 36 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 36 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 36
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 37 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 37 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 37 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 37 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 37
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 38 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 38 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 38 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 38 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 38
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 39 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 39 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 39 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 39 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 39 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 39 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 39 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 39 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 39
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 40 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 40 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 40 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 40 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 40
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 41 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 41 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 41 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 41 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 41
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 42 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 42 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 42 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 42 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 42
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 43 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 43 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 43 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 43 to Follower 1
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 43
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 44 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 44 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 44 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 44 to Follower 1
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 44
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 45 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 45 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 45 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 45 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 45
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 46 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 46 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 46 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 46 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 46
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 47 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 47 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 47 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 47 to Follower 3
+2025/12/08 16:39:02 Candidate 3 starts an election with term 2
+2025/12/08 16:39:02 Candidate 3's log: [{<nil> 0} {927 1} {8917 1}]
+2025/12/08 16:39:02 0 find a higher term, change to FOLLOWER state
+2025/12/08 16:39:02 Follower 0's log: [{<nil> 0} {927 1} {8917 1}]
+2025/12/08 16:39:02 lastLogTerm: Server 0: 1 VS Candidate 3: 1, result: false
+2025/12/08 16:39:02 lastLogIndex: Server 0: 2 VS Candidate 3: 2, result: false
+2025/12/08 16:39:02 1 find a higher term, change to FOLLOWER state
+2025/12/08 16:39:02 Follower 1's log: [{<nil> 0} {927 1} {8917 1}]
+2025/12/08 16:39:02 lastLogTerm: Server 1: 1 VS Candidate 3: 1, result: false
+2025/12/08 16:39:02 lastLogIndex: Server 1: 2 VS Candidate 3: 2, result: false
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 3 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 3 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 3 to Follower 0
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 3 to Follower 2
+2025/12/08 16:39:02 4 find a higher term, change to FOLLOWER state
+2025/12/08 16:39:02 Follower 4's log: [{<nil> 0} {927 1} {8917 1}]
+2025/12/08 16:39:02 lastLogTerm: Server 4: 1 VS Candidate 3: 1, result: false
+2025/12/08 16:39:02 lastLogIndex: Server 4: 2 VS Candidate 3: 2, result: false
+2025/12/08 16:39:02 Follower 0 log before append: [{<nil> 0} {927 1} {8917 1}], and about to append entries [] at prevlogindex = 2
+2025/12/08 16:39:02 Follower 0 log after append: [{<nil> 0} {927 1} {8917 1}]
+2025/12/08 16:39:02 Follower 0 signal applier to work
+2025/12/08 16:39:02 Leader 3 check Follower 0 nextIndex = 3, matchIndex = 2, all matchIndex: [2 0 0 2 0]
+2025/12/08 16:39:02 Leader 3 signal applier to work
+2025/12/08 16:39:02 Server 3 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Server 0 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 47 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 47 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 47 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 47 to Follower 3
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 3 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 3 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 3 to Follower 0
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 3 to Follower 2
+2025/12/08 16:39:02 Follower 0 log before append: [{<nil> 0} {927 1} {8917 1}], and about to append entries [] at prevlogindex = 2
+2025/12/08 16:39:02 Follower 0 log after append: [{<nil> 0} {927 1} {8917 1}]
+2025/12/08 16:39:02 Follower 0 signal applier to work
+2025/12/08 16:39:02 Server 0 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Leader 3 check Follower 0 nextIndex = 3, matchIndex = 2, all matchIndex: [2 0 0 2 0]
+2025/12/08 16:39:02 Leader 3 signal applier to work
+2025/12/08 16:39:02 Server 3 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 47
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 3
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 4 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 48 to Follower 0
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 4 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 48 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 4 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 48 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 4 to Follower 2
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 48 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 48
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 4
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 5 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 5 to Follower 0
+2025/12/08 16:39:02 Follower 4 log before append: [{<nil> 0} {927 1} {8917 1}], and about to append entries [{7425 2} {5668 2}] at prevlogindex = 2
+2025/12/08 16:39:02 Follower 4 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2} {5668 2}]
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 49 to Follower 4
+2025/12/08 16:39:02 Follower 4 signal applier to work
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 5 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 49 to Follower 1
+2025/12/08 16:39:02 Server 4 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 5 to Follower 2
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 49 to Follower 0
+2025/12/08 16:39:02 Leader 3 check Follower 4 nextIndex = 5, matchIndex = 4, all matchIndex: [2 0 0 4 4]
+2025/12/08 16:39:02 Leader 3 signal applier to work
+2025/12/08 16:39:02 Server 3 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 49 to Follower 3
+2025/12/08 16:39:02 Follower 0 log before append: [{<nil> 0} {927 1} {8917 1}], and about to append entries [{7425 2} {5668 2}] at prevlogindex = 2
+2025/12/08 16:39:02 Follower 0 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2} {5668 2}]
+2025/12/08 16:39:02 Follower 0 signal applier to work
+2025/12/08 16:39:02 Server 0 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Leader 3 check Follower 0 nextIndex = 5, matchIndex = 4, all matchIndex: [4 0 0 4 4]
+2025/12/08 16:39:02 Leader 3 advance commitIndex from 1 to 4, all matchIndex: [4 0 0 4 4]
+2025/12/08 16:39:02 Leader 3 signal applier to work
+2025/12/08 16:39:02 Server 3 wake up! wait for new log to apply from index 2 to 4
+2025/12/08 16:39:02 Server 3 begin to apply log from index 2 to 4
+2025/12/08 16:39:02 Server 3 apply message with index 2 and command {8917 1}
+2025/12/08 16:39:02 Server 3 apply message with index 3 and command {7425 2}
+2025/12/08 16:39:02 Server 3 apply message with index 4 and command {5668 2}
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 5 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 5 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 49
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 5
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 6 to Follower 1
+2025/12/08 16:39:02 Follower 4 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2} {5668 2}], and about to append entries [{7425 2}] at prevlogindex = 2
+2025/12/08 16:39:02 Follower 4 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:02 Follower 4 signal applier to work
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 50 to Follower 4
+2025/12/08 16:39:02 Server 4 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 6 to Follower 4
+2025/12/08 16:39:02 Follower 0 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2} {5668 2}], and about to append entries [{7425 2}] at prevlogindex = 2
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 50 to Follower 0
+2025/12/08 16:39:02 Follower 0 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 6 to Follower 2
+2025/12/08 16:39:02 Follower 0 signal applier to work
+2025/12/08 16:39:02 Server 0 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 6 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 50 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 6 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 50 to Follower 3
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 6 to Follower 2
+2025/12/08 16:39:02 Follower 1 log before append: [{<nil> 0} {927 1} {8917 1}], and about to append entries [{7425 2} {5668 2}] at prevlogindex = 2
+2025/12/08 16:39:02 Follower 1 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2} {5668 2}]
+2025/12/08 16:39:02 Follower 1 signal applier to work
+2025/12/08 16:39:02 Server 1 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Follower 1 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2} {5668 2}], and about to append entries [{7425 2}] at prevlogindex = 2
+2025/12/08 16:39:02 Follower 1 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:02 Follower 1 signal applier to work
+2025/12/08 16:39:02 Server 1 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 50
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 6
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 7 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 51 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 7 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 7 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 51 to Follower 3
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 7 to Follower 2
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 51 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 51 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 51
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 7
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 8 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 52 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 8 to Follower 2
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 8 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 52 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 8 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 52 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 52 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 52
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 8
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 9 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 9 to Follower 0
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 9 to Follower 2
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 53 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 9 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 53 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 53 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 53 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 53
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 9
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 10 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 54 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 10 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 54 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 54 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 54 to Follower 0
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 10 to Follower 2
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 10 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 54
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 10
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 11 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 11 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 11 to Follower 2
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 55 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 11 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 55 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 55 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 55 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 55
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 11
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 12 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 12 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 56 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 56 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 56 to Follower 3
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 12 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 12 to Follower 2
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 56 to Follower 0
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 56
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 12
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 13 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 13 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 57 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 57 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 13 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 13 to Follower 2
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 57 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 57 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 57 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 57 to Follower 1
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 57 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 57 to Follower 3
+2025/12/08 16:39:02 Leader 2 receive a command from client with index 57
+2025/12/08 16:39:02 Leader 3 receive a command from client with index 13
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 14 to Follower 4
+2025/12/08 16:39:02 Leader 2 send entries start = 3, end = 58 to Follower 4
+2025/12/08 16:39:02 Leader 3 send entries start = 5, end = 14 to Follower 0
+2025/12/08 16:39:02 Leader 2 send entries start = 1, end = 58 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 14 to Follower 1
+2025/12/08 16:39:02 Leader 3 send entries start = 3, end = 14 to Follower 2
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 58 to Follower 3
+2025/12/08 16:39:02 Leader 2 send entries start = 2, end = 58 to Follower 0
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 14 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 14 to Follower 0
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 14 to Follower 2
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 14 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 58 to Follower 4
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 58 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 58 to Follower 3
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 58 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 58 to Follower 4
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 58 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 58 to Follower 3
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 58 to Follower 0
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 14 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 14 to Follower 1
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 14 to Follower 2
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 14 to Follower 0
+2025/12/08 16:39:03 Leader 2 receive a command from client with index 58
+2025/12/08 16:39:03 Leader 3 receive a command from client with index 14
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 15 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 15 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 59 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 15 to Follower 1
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 15 to Follower 2
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 59 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 59 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 59 to Follower 3
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 59 to Follower 4
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 59 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 59 to Follower 3
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 59 to Follower 0
+2025/12/08 16:39:03 Leader 2 receive a command from client with index 59
+2025/12/08 16:39:03 Leader 3 receive a command from client with index 15
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 16 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 16 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 60 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 16 to Follower 2
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 60 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 60 to Follower 3
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 60 to Follower 0
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 16 to Follower 1
+2025/12/08 16:39:03 Candidate 4 starts an election with term 3
+2025/12/08 16:39:03 Candidate 4's log: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:03 Leader 2 receive a command from client with index 60
+2025/12/08 16:39:03 Leader 3 receive a command from client with index 16
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 61 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 17 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 17 to Follower 1
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 17 to Follower 2
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 61 to Follower 1
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 17 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 61 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 61 to Follower 3
+2025/12/08 16:39:03 1 find a higher term, change to FOLLOWER state
+2025/12/08 16:39:03 Leader 2 receive a command from client with index 61
+2025/12/08 16:39:03 Follower 1's log: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:03 lastLogTerm: Server 1: 2 VS Candidate 4: 2, result: false
+2025/12/08 16:39:03 lastLogIndex: Server 1: 3 VS Candidate 4: 3, result: false
+2025/12/08 16:39:03 Leader 3 receive a command from client with index 17
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 62 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 18 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 18 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 62 to Follower 0
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 18 to Follower 2
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 18 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 62 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 62 to Follower 3
+2025/12/08 16:39:03 Leader 2 receive a command from client with index 62
+2025/12/08 16:39:03 Leader 3 receive a command from client with index 18
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 19 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 19 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 63 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 19 to Follower 2
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 63 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 63 to Follower 3
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 63 to Follower 0
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 19 to Follower 0
+2025/12/08 16:39:03 0 find a higher term, change to FOLLOWER state
+2025/12/08 16:39:03 Follower 0's log: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:03 lastLogTerm: Server 0: 2 VS Candidate 4: 2, result: false
+2025/12/08 16:39:03 lastLogIndex: Server 0: 3 VS Candidate 4: 3, result: false
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 3
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 1
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 2
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 0
+2025/12/08 16:39:03 Follower 0 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2}], and about to append entries [] at prevlogindex = 3
+2025/12/08 16:39:03 Follower 0 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:03 Follower 0 signal applier to work
+2025/12/08 16:39:03 Leader 4 check Follower 0 nextIndex = 4, matchIndex = 3, all matchIndex: [3 0 0 0 3]
+2025/12/08 16:39:03 Leader 4 signal applier to work
+2025/12/08 16:39:03 Server 4 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Server 0 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Follower 1 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2}], and about to append entries [] at prevlogindex = 3
+2025/12/08 16:39:03 Follower 1 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:03 Follower 1 signal applier to work
+2025/12/08 16:39:03 Server 1 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Leader 4 check Follower 1 nextIndex = 4, matchIndex = 3, all matchIndex: [3 3 0 0 3]
+2025/12/08 16:39:03 Leader 4 signal applier to work
+2025/12/08 16:39:03 Server 4 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 63 to Follower 4
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 63 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 63 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 63 to Follower 3
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 19 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 19 to Follower 1
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 19 to Follower 2
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 19 to Follower 0
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 3
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 1
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 0
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 2
+2025/12/08 16:39:03 Follower 1 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2}], and about to append entries [] at prevlogindex = 3
+2025/12/08 16:39:03 Follower 1 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:03 Follower 1 signal applier to work
+2025/12/08 16:39:03 Leader 4 check Follower 1 nextIndex = 4, matchIndex = 3, all matchIndex: [3 3 0 0 3]
+2025/12/08 16:39:03 Server 1 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Leader 4 signal applier to work
+2025/12/08 16:39:03 Server 4 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Follower 0 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2}], and about to append entries [] at prevlogindex = 3
+2025/12/08 16:39:03 Follower 0 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:03 Follower 0 signal applier to work
+2025/12/08 16:39:03 Leader 4 check Follower 0 nextIndex = 4, matchIndex = 3, all matchIndex: [3 3 0 0 3]
+2025/12/08 16:39:03 Server 0 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Leader 4 signal applier to work
+2025/12/08 16:39:03 Server 4 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 63 to Follower 4
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 63 to Follower 3
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 63 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 63 to Follower 0
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 3
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 1
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 2
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 4 to Follower 0
+2025/12/08 16:39:03 Follower 0 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2}], and about to append entries [] at prevlogindex = 3
+2025/12/08 16:39:03 Follower 0 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:03 Follower 0 signal applier to work
+2025/12/08 16:39:03 Leader 4 check Follower 0 nextIndex = 4, matchIndex = 3, all matchIndex: [3 3 0 0 3]
+2025/12/08 16:39:03 Leader 4 signal applier to work
+2025/12/08 16:39:03 Server 4 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Server 0 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Follower 1 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2}], and about to append entries [] at prevlogindex = 3
+2025/12/08 16:39:03 Follower 1 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2}]
+2025/12/08 16:39:03 Follower 1 signal applier to work
+2025/12/08 16:39:03 Server 1 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Leader 4 check Follower 1 nextIndex = 4, matchIndex = 3, all matchIndex: [3 3 0 0 3]
+2025/12/08 16:39:03 Leader 4 signal applier to work
+2025/12/08 16:39:03 Server 4 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 19 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 19 to Follower 1
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 19 to Follower 2
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 19 to Follower 0
+2025/12/08 16:39:03 Leader 2 receive a command from client with index 63
+2025/12/08 16:39:03 Leader 3 receive a command from client with index 19
+2025/12/08 16:39:03 Leader 4 receive a command from client with index 4
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 5 to Follower 3
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 5 to Follower 1
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 5 to Follower 0
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 5 to Follower 2
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 64 to Follower 4
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 64 to Follower 3
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 64 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 20 to Follower 4
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 64 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 64 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 64 to Follower 1
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 20 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 64 to Follower 3
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 20 to Follower 1
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 64 to Follower 0
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 20 to Follower 2
+2025/12/08 16:39:03 Leader 2 receive a command from client with index 64
+2025/12/08 16:39:03 Leader 3 receive a command from client with index 20
+2025/12/08 16:39:03 Leader 4 receive a command from client with index 5
+2025/12/08 16:39:03 Leader 2 send entries start = 3, end = 65 to Follower 4
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 21 to Follower 4
+2025/12/08 16:39:03 Leader 2 send entries start = 1, end = 65 to Follower 1
+2025/12/08 16:39:03 Leader 3 send entries start = 5, end = 21 to Follower 0
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 65 to Follower 3
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 21 to Follower 1
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 6 to Follower 3
+2025/12/08 16:39:03 Leader 2 send entries start = 2, end = 65 to Follower 0
+2025/12/08 16:39:03 Leader 3 send entries start = 3, end = 21 to Follower 2
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 6 to Follower 0
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 6 to Follower 1
+2025/12/08 16:39:03 Leader 4 send entries start = 4, end = 6 to Follower 2
+2025/12/08 16:39:04 Leader 2 receive a command from client with index 65
+2025/12/08 16:39:04 Follower 0 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2}], and about to append entries [{6575 3} {2812 3}] at prevlogindex = 3
+2025/12/08 16:39:04 Follower 0 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2} {6575 3} {2812 3}]
+2025/12/08 16:39:04 Leader 3 receive a command from client with index 21
+2025/12/08 16:39:04 Leader 4 receive a command from client with index 6
+2025/12/08 16:39:04 Follower 0 signal applier to work
+2025/12/08 16:39:04 Leader 4 send entries start = 4, end = 7 to Follower 3
+2025/12/08 16:39:04 Leader 2 send entries start = 3, end = 66 to Follower 4
+2025/12/08 16:39:04 Leader 4 send entries start = 4, end = 7 to Follower 2
+2025/12/08 16:39:04 Server 0 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:04 Leader 4 send entries start = 4, end = 7 to Follower 0
+2025/12/08 16:39:04 Leader 4 send entries start = 4, end = 7 to Follower 1
+2025/12/08 16:39:04 Leader 2 send entries start = 2, end = 66 to Follower 0
+2025/12/08 16:39:04 Leader 4 check Follower 0 nextIndex = 6, matchIndex = 5, all matchIndex: [5 3 0 0 6]
+2025/12/08 16:39:04 Leader 4 signal applier to work
+2025/12/08 16:39:04 Server 4 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:04 Leader 3 send entries start = 5, end = 22 to Follower 4
+2025/12/08 16:39:04 Leader 2 send entries start = 1, end = 66 to Follower 1
+2025/12/08 16:39:04 Leader 3 send entries start = 3, end = 22 to Follower 1
+2025/12/08 16:39:04 Leader 2 send entries start = 2, end = 66 to Follower 3
+2025/12/08 16:39:04 Leader 3 send entries start = 5, end = 22 to Follower 0
+2025/12/08 16:39:04 Leader 3 send entries start = 3, end = 22 to Follower 2
+2025/12/08 16:39:04 Follower 1 log before append: [{<nil> 0} {927 1} {8917 1} {7425 2}], and about to append entries [{6575 3} {2812 3}] at prevlogindex = 3
+2025/12/08 16:39:04 Follower 1 log after append: [{<nil> 0} {927 1} {8917 1} {7425 2} {6575 3} {2812 3}]
+2025/12/08 16:39:04 Follower 1 signal applier to work
+2025/12/08 16:39:04 Server 1 wake up! wait for new log to apply from index 2 to 1
+2025/12/08 16:39:04 Leader 4 check Follower 1 nextIndex = 6, matchIndex = 5, all matchIndex: [5 5 0 0 6]
+2025/12/08 16:39:04 Leader 4 advance commitIndex from 1 to 5, all matchIndex: [5 5 0 0 6]
+2025/12/08 16:39:04 Leader 4 signal applier to work
+2025/12/08 16:39:04 Server 4 wake up! wait for new log to apply from index 2 to 5
+2025/12/08 16:39:04 Server 4 begin to apply log from index 2 to 5
+2025/12/08 16:39:04 Server 4 apply message with index 2 and command {8917 1}
+2025/12/08 16:39:04 Server 4 apply message with index 3 and command {7425 2}
+2025/12/08 16:39:04 Server 4 apply message with index 4 and command {6575 3}
+info: wrote visualization to /tmp/porcupine-442003.html
+2025/12/08 16:39:04 apply error: commit index=4 server=4 6575 != server=3 5668
+FAIL	6.5840/raft1	2.829s
+FAIL

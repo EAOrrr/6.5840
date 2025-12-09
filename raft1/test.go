@@ -11,7 +11,7 @@ import (
 
 	"6.5840/labrpc"
 	"6.5840/raftapi"
-	"6.5840/tester1"
+	tester "6.5840/tester1"
 )
 
 type Test struct {
@@ -242,7 +242,7 @@ func (ts *Test) one(cmd any, expectedServers int, retry bool) int {
 				ts.srvs[starts].mu.Unlock()
 			}
 			if rf != nil {
-				//log.Printf("peer %d Start %v", starts, cmd)
+				// log.Printf("peer %d Start %v", starts, cmd)
 				index1, _, ok := rf.Start(cmd)
 				if ok {
 					index = index1
