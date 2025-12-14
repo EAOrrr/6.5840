@@ -165,6 +165,9 @@ func (rf *Raft) readPersist(data []byte) {
 
 		rf.commitIndex = lastIncludedIndex
 		rf.lastApplied = lastIncludedIndex
+
+		rf.nextIndex[rf.me] = len(rf.log) + rf.firstLogIndex
+		rf.matchIndex[rf.me] = lastIncludedIndex
 	}
 }
 
@@ -403,6 +406,7 @@ func (rf *Raft) InstallSnapshot(args *InstallSnapshotArgs, reply *InstallSnapsho
 	if args.Term < rf.currentTerm {
 		return
 	}
+	rf.resetElectionTimer()
 	if args.LastIncludedIndex > rf.commitIndex {
 		// DPrintf("Follower %v receive snapshot from Leader %v with lastIncludedIndex = %v, lastIncludedTerm = %v", rf.me, args.LeaderId, args.LastIncludedIndex, args.LastIncludedTerm)
 		// accept only newer snapshot
@@ -631,7 +635,7 @@ func (rf *Raft) applier() {
 	close(rf.applyCh)
 }
 
-func (rf *Raft) checkTermChange(newTerm int) {
+func (rf *Raft) checkTermChange(newTerm int) bool {
 	if rf.currentTerm < newTerm {
 		// DPrintf("%v find a higher term, change to FOLLOWER state", rf.me)
 		rf.currentTerm = newTerm
@@ -639,8 +643,9 @@ func (rf *Raft) checkTermChange(newTerm int) {
 
 		rf.state = T_FOLLOWER
 		rf.persist()
-		return
+		return true
 	}
+	return false
 }
 
 func (rf *Raft) resetElectionTimer() {
@@ -669,14 +674,14 @@ func (rf *Raft) checkHeartbeatTimeout() bool {
 }
 
 func (rf *Raft) sendHeartbeats() {
+	rf.mu.Lock()
+	rf.resetHeartbeatTimer()
+	rf.mu.Unlock()
 	for peer := range rf.peers {
 		if peer != rf.me {
 			go rf.sendHeartbeat(peer)
 		}
 	}
-	rf.mu.Lock()
-	rf.resetHeartbeatTimer()
-	rf.mu.Unlock()
 }
 
 func (rf *Raft) sendHeartbeat(peer int) {
@@ -707,14 +712,15 @@ func (rf *Raft) sendHeartbeat(peer int) {
 		}
 
 		rf.mu.Lock()
+		term := rf.currentTerm
 		rf.checkTermChange(reply.Term)
-		if rf.state != T_LEADER {
+		if rf.state != T_LEADER || term != args.Term {
 			rf.mu.Unlock()
 			return
 		}
 		// advance nextIndex and matchIndex
-		rf.nextIndex[peer] = args.LastIncludedIndex + 1
-		rf.matchIndex[peer] = args.LastIncludedIndex
+		rf.nextIndex[peer] = max(args.LastIncludedIndex+1, rf.nextIndex[peer])
+		rf.matchIndex[peer] = max(args.LastIncludedIndex, rf.matchIndex[peer])
 		// DPrintf("Leader %v update follower %v's matchindex = %v, nextindex = %v", rf.me, peer, rf.nextIndex[peer], rf.matchIndex[peer])
 		rf.mu.Unlock()
 		return
@@ -749,13 +755,22 @@ func (rf *Raft) sendHeartbeat(peer int) {
 		return
 	}
 
+	rf.mu.Lock()
+	term := rf.currentTerm
+	// check term
+	rf.checkTermChange(reply.Term)
+	if rf.state != T_LEADER || term != args.Term {
+		// reject due to term change or obsolete reply
+		rf.mu.Unlock()
+		return
+	}
 	// check success
 	if !reply.Success {
 		// AppendEntries fail
 		// DPrintf("Leader %v got rejection from %v in term %v with reply.term = %v", rf.me, peer, args.Term, reply.Term)
-		rf.mu.Lock()
-		rf.checkTermChange(reply.Term)
-		if rf.state != T_LEADER || reply.XLen == 0 {
+		// rf.checkTermChange(reply.Term)
+		// if rf.state != T_LEADER || reply.XLen == 0 {
+		if reply.XLen == 0 {
 			// reject due to term change and outdated reply
 			// if reply.xlen == 0 and !reply.success, it means that the request is rejected for outdated term
 			rf.mu.Unlock()
@@ -803,7 +818,6 @@ func (rf *Raft) sendHeartbeat(peer int) {
 		return
 	} else {
 		// AppendEntries success
-		rf.mu.Lock()
 		// nextIndex and matchIndex update: only advance
 		rf.nextIndex[peer] = max(rf.nextIndex[peer], end+firstLogIndex) // in case firstlogIndex change
 		newMatchIndex := prevLogIndex + len(args.Entries)
@@ -827,7 +841,7 @@ func (rf *Raft) advanceCommitIndex() {
 		// DPrintf("Leader %v advance commitIndex from %v to %v, all matchIndex: %v", rf.me, rf.commitIndex, midIndex, rf.matchIndex)
 		rf.commitIndex = midIndex
 		rf.applyCond.Signal()
-
+		go rf.sendHeartbeats()
 	}
 }
 
