@@ -15,6 +15,8 @@ import (
 
 const DEBUG = false
 
+// const DEBUG = true
+
 func DPrintf(format string, a ...interface{}) {
 	if DEBUG {
 		log.Printf(format, a...)
@@ -55,7 +57,7 @@ const (
 
 type LogInfo struct {
 	state  LogState
-	cmd    Op
+	cmdId  int
 	result any
 }
 
@@ -67,9 +69,11 @@ type RSM struct {
 	maxraftstate int // snapshot if log grows this big
 	sm           StateMachine
 	// Your definitions here.
-	dead            int32
+	dead int32
+	// mu is used to protect following fields
 	logPending      map[int]LogInfo
 	nextClientCmdId int
+	// commitIndex     int
 }
 
 // servers[] contains the ports of the set of
@@ -100,8 +104,13 @@ func MakeRSM(servers []*labrpc.ClientEnd, me int, persister *tester.Persister, m
 	if !useRaftStateMachine {
 		rsm.rf = raft.Make(servers, me, persister, rsm.applyCh)
 	}
+	if snapshot := persister.ReadSnapshot(); len(snapshot) > 0 {
+		DPrintf("rsm %v call sm.restore(snapshot) at start with snapshot len %v", rsm.me, len(snapshot))
+		rsm.sm.Restore(snapshot)
+	}
 
 	go rsm.reader()
+	// go rsm.snapshoter()
 
 	return rsm
 }
@@ -136,7 +145,7 @@ func (rsm *RSM) Submit(req any) (rpc.Err, any) {
 	}
 	rsm.logPending[idx] = LogInfo{
 		state: PENDING,
-		cmd:   opReq,
+		cmdId: opReq.Id,
 	}
 	rsm.mu.Unlock()
 	DPrintf("server %v receive cmd with idx %v from server", rsm.me, idx)
@@ -177,17 +186,6 @@ func (rsm *RSM) checkLogAtIndex(index int) (LogState, any) {
 	return logInfo.state, logInfo.result
 }
 
-func (rsm *RSM) addPendingLog(index int, cmd Op) {
-	rsm.mu.Lock()
-	defer rsm.mu.Unlock()
-
-	rsm.logPending[index] = LogInfo{
-		state: PENDING,
-		cmd:   cmd,
-	}
-	DPrintf("server %v's pendinglog after add pending log %v", rsm.me, rsm.logPending)
-}
-
 func (rsm *RSM) removeLogAtIndex(index int) {
 	rsm.mu.Lock()
 	defer rsm.mu.Unlock()
@@ -201,7 +199,7 @@ func (rsm *RSM) killed() bool {
 }
 
 func (rsm *RSM) reader() {
-	for {
+	for !rsm.killed() {
 		applyMsg, ok := <-rsm.applyCh
 		if !ok { // rsm.rf is killed
 			atomic.StoreInt32(&rsm.dead, 1)
@@ -211,26 +209,27 @@ func (rsm *RSM) reader() {
 		if applyMsg.CommandValid { // command return
 			idx, cmd := applyMsg.CommandIndex, applyMsg.Command
 			var result any
-			if cmdOp, ok := cmd.(Op); ok {
+			cmdOp, ok0 := cmd.(Op)
+			if ok0 {
 				result = rsm.sm.DoOp(cmdOp.Req)
 			} else {
 				log.Fatalf("server %v find cmd without cmd.(Op)", rsm.me)
 			}
-
 			rsm.mu.Lock()
+			// rsm.commitIndex = max(idx, rsm.commitIndex)
 			logInfo, ok1 := rsm.logPending[idx]
 			if ok1 {
-				if cmd == logInfo.cmd {
+				if cmdOp.Me == rsm.me && cmdOp.Id == logInfo.cmdId {
 					rsm.logPending[idx] = LogInfo{
 						state:  FULFILLED,
-						cmd:    logInfo.cmd,
+						cmdId:  logInfo.cmdId,
 						result: result,
 					}
 					DPrintf("server %v change %v' state to fullfilled", rsm.me, idx)
 				} else {
 					rsm.logPending[idx] = LogInfo{
 						state: REJECTED,
-						cmd:   logInfo.cmd,
+						cmdId: logInfo.cmdId,
 					}
 					DPrintf("server %v change %v' state to rejected", rsm.me, idx)
 				}
@@ -238,6 +237,16 @@ func (rsm *RSM) reader() {
 				DPrintf("server %v reject to process cmd with index %v", rsm.me, idx)
 			}
 			rsm.mu.Unlock()
+			if rsm.maxraftstate != -1 && rsm.maxraftstate <= rsm.rf.PersistBytes() {
+				DPrintf("rsm %v call sm.snapshot(snapshot) when snapshotsize > maxraftstate with snapshot len %v", rsm.me, rsm.rf.PersistBytes())
+
+				rsm.rf.Snapshot(idx, rsm.sm.Snapshot())
+			}
+		}
+		if applyMsg.SnapshotValid {
+			DPrintf("rsm %v call sm.restore(snapshot) when receiving snapshot with snapshot len %v", rsm.me, len(applyMsg.Snapshot))
+
+			rsm.sm.Restore(applyMsg.Snapshot)
 		}
 	}
 }
