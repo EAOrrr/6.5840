@@ -5,13 +5,27 @@ package shardctrler
 //
 
 import (
+	"log"
+	"sync"
 
-	"6.5840/kvsrv1"
-	"6.5840/kvtest1"
+	kvsrv "6.5840/kvsrv1"
+	kvtest "6.5840/kvtest1"
 	"6.5840/shardkv1/shardcfg"
-	"6.5840/tester1"
+	"6.5840/shardkv1/shardgrp"
+	tester "6.5840/tester1"
 )
 
+// const Debug = true
+
+const Debug = false
+
+func DPrintf(format string, a ...interface{}) {
+	if Debug {
+		log.Printf(format, a...)
+	}
+}
+
+const CONFIGURATION_KEY = "config_key"
 
 // ShardCtrler for the controller and kv clerk.
 type ShardCtrler struct {
@@ -45,6 +59,8 @@ func (sck *ShardCtrler) InitController() {
 // lists shardgrp shardcfg.Gid1 for all shards.
 func (sck *ShardCtrler) InitConfig(cfg *shardcfg.ShardConfig) {
 	// Your code here
+	DPrintf("CTRL init config: %s", cfg.String())
+	sck.IKVClerk.Put(CONFIGURATION_KEY, cfg.String(), 0)
 }
 
 // Called by the tester to ask the controller to change the
@@ -53,12 +69,35 @@ func (sck *ShardCtrler) InitConfig(cfg *shardcfg.ShardConfig) {
 // controller.
 func (sck *ShardCtrler) ChangeConfigTo(new *shardcfg.ShardConfig) {
 	// Your code here.
-}
+	cfgstr, version, _ := sck.IKVClerk.Get(CONFIGURATION_KEY)
+	old := shardcfg.FromString(cfgstr)
+	DPrintf("CTRL change config from %+v to %+v", old, new)
+	var wg sync.WaitGroup
+	for shard0 := range shardcfg.NShards {
+		shard := shardcfg.Tshid(shard0)
+		wg.Add(1)
 
+		go func(shard shardcfg.Tshid, old *shardcfg.ShardConfig, new *shardcfg.ShardConfig) {
+			defer wg.Done()
+			_, srvs0, _ := old.GidServers(shard)
+			_, srvs1, _ := new.GidServers(shard)
+
+			oldCrk := shardgrp.MakeClerk(sck.clnt, srvs0)
+			newCrk := shardgrp.MakeClerk(sck.clnt, srvs1)
+
+			state, _ := oldCrk.FreezeShard(shard, new.Num)
+			newCrk.InstallShard(shard, state, new.Num)
+			oldCrk.DeleteShard(shard, new.Num)
+		}(shard, old, new)
+	}
+	wg.Wait()
+	sck.IKVClerk.Put(CONFIGURATION_KEY, new.String(), version)
+	DPrintf("CTRL change config successfully %v", new.Num)
+}
 
 // Return the current configuration
 func (sck *ShardCtrler) Query() *shardcfg.ShardConfig {
 	// Your code here.
-	return nil
+	cfg, _, _ := sck.IKVClerk.Get(CONFIGURATION_KEY)
+	return shardcfg.FromString(cfg)
 }
-
