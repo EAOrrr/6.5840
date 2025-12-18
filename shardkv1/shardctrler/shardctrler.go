@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	kvsrv "6.5840/kvsrv1"
+	"6.5840/kvsrv1/rpc"
 	kvtest "6.5840/kvtest1"
 	"6.5840/shardkv1/shardcfg"
 	"6.5840/shardkv1/shardgrp"
@@ -26,6 +27,7 @@ func DPrintf(format string, a ...interface{}) {
 }
 
 const CONFIGURATION_KEY = "config_key"
+const NEXT_CONFIG_KEY = "next_config_key"
 
 // ShardCtrler for the controller and kv clerk.
 type ShardCtrler struct {
@@ -50,6 +52,19 @@ func MakeShardCtrler(clnt *tester.Clnt) *ShardCtrler {
 // controller. In part A, this method doesn't need to do anything. In
 // B and C, this method implements recovery.
 func (sck *ShardCtrler) InitController() {
+	// check my config
+	curr, _, err0 := sck.IKVClerk.Get(CONFIGURATION_KEY)
+	next, _, err1 := sck.IKVClerk.Get(NEXT_CONFIG_KEY)
+
+	if err0 == rpc.ErrNoKey || err1 == rpc.ErrNoKey {
+		return
+	}
+	currCfg, nextCfg := shardcfg.FromString(curr), shardcfg.FromString(next)
+
+	// check if nextCfg have a higher Num
+	if nextCfg.Num > currCfg.Num {
+		sck.ChangeConfigTo(nextCfg)
+	}
 }
 
 // Called once by the tester to supply the first configuration.  You
@@ -69,6 +84,28 @@ func (sck *ShardCtrler) InitConfig(cfg *shardcfg.ShardConfig) {
 // controller.
 func (sck *ShardCtrler) ChangeConfigTo(new *shardcfg.ShardConfig) {
 	// Your code here.
+
+	// push next config to remote
+	next, version0, err0 := sck.IKVClerk.Get(NEXT_CONFIG_KEY)
+	if err0 == rpc.ErrNoKey {
+		version0 = 0
+	}
+	// nextCfg := shardcfg.FromString(next)
+
+	err1 := sck.IKVClerk.Put(NEXT_CONFIG_KEY, new.String(), version0)
+	_ = next
+	_ = err1
+	// switch err1 {
+
+	// case rpc.ErrMaybe:
+	// 	next, _, _ := sck.IKVClerk.Get(NEXT_CONFIG_KEY)
+	// 	if next != new.String() {
+	// 		return
+	// 	}
+	// case rpc.ErrVersion:
+	// 	return
+	// }
+
 	cfgstr, version, _ := sck.IKVClerk.Get(CONFIGURATION_KEY)
 	old := shardcfg.FromString(cfgstr)
 	DPrintf("CTRL change config from %+v to %+v", old, new)
@@ -85,8 +122,14 @@ func (sck *ShardCtrler) ChangeConfigTo(new *shardcfg.ShardConfig) {
 			oldCrk := shardgrp.MakeClerk(sck.clnt, srvs0)
 			newCrk := shardgrp.MakeClerk(sck.clnt, srvs1)
 
-			state, _ := oldCrk.FreezeShard(shard, new.Num)
-			newCrk.InstallShard(shard, state, new.Num)
+			state, err := oldCrk.FreezeShard(shard, new.Num)
+			if err == rpc.ErrVersion || err == rpc.ErrNoKey {
+				return
+			}
+			err = newCrk.InstallShard(shard, state, new.Num)
+			if err == rpc.ErrVersion {
+				return
+			}
 			oldCrk.DeleteShard(shard, new.Num)
 		}(shard, old, new)
 	}

@@ -99,7 +99,8 @@ func (kv *KVServer) DoOp(req any) any {
 	case shardrpc.FreezeShardArgs:
 		DPrintf("SERVER gid %v id %v receive FreezeShardArgs: %+v", kv.gid, kv.me, args)
 		shard := args.Shard
-		if args.Num < kv.shardMaxConfigNum[shard] {
+		myConfigNum := kv.shardMaxConfigNum[shard]
+		if args.Num < myConfigNum {
 			return shardrpc.FreezeShardReply{
 				Err: rpc.ErrVersion,
 				Num: kv.shardMaxConfigNum[shard],
@@ -109,9 +110,11 @@ func (kv *KVServer) DoOp(req any) any {
 		}
 		shardInfo, ok := kv.shardData[shard]
 		if ok {
-			kv.shardData[shard] = ShardData{
-				Data:   shardInfo.Data,
-				Frozen: true,
+			if args.Num > myConfigNum {
+				kv.shardData[shard] = ShardData{
+					Data:   shardInfo.Data,
+					Frozen: true,
+				}
 			}
 			state := EncodeShardState(&shardInfo.Data)
 			DPrintf("SERVER gid %v id %v after freezeshard %v data: %+v", kv.gid, kv.me, shard, kv.shardData)
