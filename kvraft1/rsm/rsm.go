@@ -162,6 +162,7 @@ func (rsm *RSM) Submit(req any) (rpc.Err, any) {
 		logState, result := rsm.checkLogAtIndex(idx)
 		switch logState {
 		case REJECTED:
+			rsm.removeLogAtIndex(idx)
 			fallthrough
 		case NONEXIST:
 			return rpc.ErrWrongLeader, nil

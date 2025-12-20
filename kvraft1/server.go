@@ -128,14 +128,6 @@ func (kv *KVServer) Put(args *rpc.PutArgs, reply *rpc.PutReply) {
 	// You can use go's type casts to turn the any return value
 	// of Submit() into a PutReply: rep.(rpc.PutReply)
 	err, rep := kv.rsm.Submit(*args)
-	// kv.mu.Lock()
-	// if prev, ok := kv.record[args.Id]; ok {
-	// 	// duplicate request
-	// 	reply.Err = prev
-	// 	kv.mu.Unlock()
-	// 	return
-	// }
-	// kv.mu.Unlock()
 
 	if err == rpc.ErrWrongLeader {
 		reply.Err = rpc.ErrWrongLeader

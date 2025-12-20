@@ -39,18 +39,19 @@ func (kv *KVServer) DoOp(req any) any {
 	// Your code here
 	DPrintf("SERVER gid %v id %v now receive req %v, DOOP BEGIN", kv.gid, kv.me, req)
 	defer DPrintf("SERVER gid %v id %v now receive req %v, DOOP END", kv.gid, kv.me, req)
+
 	switch args := req.(type) {
 	case rpc.GetArgs:
 		DPrintf("SERVER gid %v id %v receive GetArgs: %+v", kv.gid, kv.me, args)
 		key := args.Key
 		shard := shardcfg.Key2Shard(key)
 		shardInfo, ok0 := kv.shardData[shard]
-		if !ok0 {
+		if !ok0 { // shard non-exist
 			DPrintf("SERVER gid %v id %v reject get for wronggroup ", kv.gid, kv.me)
 			return rpc.GetReply{Err: rpc.ErrWrongGroup}
 		}
 		dataValue, ok1 := shardInfo.Data[key]
-		if !ok1 {
+		if !ok1 { // fail to fetch data
 			return rpc.GetReply{Err: rpc.ErrNoKey}
 		} else {
 			DPrintf("SERVER gid %v id %v shard %d info %+v", kv.gid, kv.me, shard, shardInfo)
@@ -65,7 +66,7 @@ func (kv *KVServer) DoOp(req any) any {
 		key := args.Key
 		shard := shardcfg.Key2Shard(key)
 		shardInfo, ok0 := kv.shardData[shard]
-		if !ok0 || shardInfo.Frozen {
+		if !ok0 || shardInfo.Frozen { // shard not exist or shard is frozen
 			DPrintf("SERVER gid %v id %v reject put for wronggroup ok: %v, frozen: %v", kv.gid, kv.me, ok0, shardInfo.Frozen)
 			return rpc.PutReply{Err: rpc.ErrWrongGroup}
 		}
@@ -100,12 +101,12 @@ func (kv *KVServer) DoOp(req any) any {
 		DPrintf("SERVER gid %v id %v receive FreezeShardArgs: %+v", kv.gid, kv.me, args)
 		shard := args.Shard
 		myConfigNum := kv.shardMaxConfigNum[shard]
-		if args.Num < myConfigNum {
+		if args.Num < myConfigNum { // reject freezeshard with lower Num
 			return shardrpc.FreezeShardReply{
 				Err: rpc.ErrVersion,
 				Num: kv.shardMaxConfigNum[shard],
 			}
-		} else {
+		} else { // memorize highest Num
 			kv.shardMaxConfigNum[shard] = args.Num
 		}
 		shardInfo, ok := kv.shardData[shard]
@@ -126,6 +127,7 @@ func (kv *KVServer) DoOp(req any) any {
 			}
 
 		} else {
+			// shard NonExist, may migrated. reject duplicate freezeshard
 			return shardrpc.FreezeShardReply{
 				Err: rpc.ErrVersion,
 				Num: kv.shardMaxConfigNum[shard],
@@ -146,6 +148,8 @@ func (kv *KVServer) DoOp(req any) any {
 		DecodeShardState(args.State, &shardState)
 		shardInfo, ok := kv.shardData[shard]
 		if !ok || shardInfo.Frozen {
+			// install new shard
+			// or unfreeze frozen shard (prevent old data from overwriting)
 			kv.shardData[shard] = ShardData{
 				Data:   shardState,
 				Frozen: false,
@@ -168,10 +172,10 @@ func (kv *KVServer) DoOp(req any) any {
 			kv.shardMaxConfigNum[shard] = args.Num
 		}
 		if shardInfo, ok := kv.shardData[shard]; ok {
-			if shardInfo.Frozen {
+			if shardInfo.Frozen { // delete only frozen data avoid delete installed data
 				delete(kv.shardData, shard)
 			}
-		}
+		} // else data already deleted
 		DPrintf("SERVER gid %v id %v after deleteshard %v data: %+v", kv.gid, kv.me, shard, kv.shardData)
 		return shardrpc.DeleteShardReply{
 			Err: rpc.OK,

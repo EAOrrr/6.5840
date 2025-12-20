@@ -19,6 +19,7 @@ type Clerk struct {
 }
 
 const SLEEP_INTERVAL = 5
+const QUERY_EACH_SERVER = 2
 
 func MakeClerk(clnt *tester.Clnt, servers []string) *Clerk {
 	ck := &Clerk{clnt: clnt, servers: servers}
@@ -47,7 +48,7 @@ func (ck *Clerk) Get(key string) (string, rpc.Tversion, rpc.Err) {
 			serverId = (serverId + 1) % len(ck.servers)
 			if !ok {
 				retry++
-				if retry > 5 {
+				if retry > QUERY_EACH_SERVER*len(ck.servers) {
 					return "", 0, rpc.ErrWrongGroup
 				}
 			}
@@ -91,7 +92,10 @@ func (ck *Clerk) Put(key string, value string, version rpc.Tversion) rpc.Err {
 			}
 		} else {
 			retry++
-			if retry > 5 {
+			if retry > QUERY_EACH_SERVER*len(ck.servers) {
+				// if a client cannot connect servers
+				// it may lose connection from server
+				// signal application layer to requery ctrl
 				return rpc.ErrWrongGroup
 			}
 		}
