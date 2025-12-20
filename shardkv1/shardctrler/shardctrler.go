@@ -7,6 +7,7 @@ package shardctrler
 import (
 	"log"
 	"sync"
+	"time"
 
 	kvsrv "6.5840/kvsrv1"
 	"6.5840/kvsrv1/rpc"
@@ -53,17 +54,22 @@ func MakeShardCtrler(clnt *tester.Clnt) *ShardCtrler {
 // B and C, this method implements recovery.
 func (sck *ShardCtrler) InitController() {
 	// check my config
-	curr, _, err0 := sck.IKVClerk.Get(CONFIGURATION_KEY)
+	curr, version0, err0 := sck.IKVClerk.Get(CONFIGURATION_KEY)
 	next, _, err1 := sck.IKVClerk.Get(NEXT_CONFIG_KEY)
 
+	// if err0 == rpc.ErrNoKey || err1 == rpc.ErrNoKey {
+	// 	return
+	// }
 	if err0 == rpc.ErrNoKey || err1 == rpc.ErrNoKey {
-		return
+		// should not happen
+		log.Fatalf("nextCfg or oldCfg not exist, which should not happen")
 	}
 	currCfg, nextCfg := shardcfg.FromString(curr), shardcfg.FromString(next)
 
 	// check if nextCfg have a higher Num
 	if nextCfg.Num > currCfg.Num {
-		sck.ChangeConfigTo(nextCfg)
+		// sck.ChangeConfigTo(nextCfg)
+		sck.migrateTo(currCfg, nextCfg, version0)
 	}
 }
 
@@ -76,6 +82,7 @@ func (sck *ShardCtrler) InitConfig(cfg *shardcfg.ShardConfig) {
 	// Your code here
 	DPrintf("CTRL init config: %s", cfg.String())
 	sck.IKVClerk.Put(CONFIGURATION_KEY, cfg.String(), 0)
+	sck.IKVClerk.Put(NEXT_CONFIG_KEY, cfg.String(), 0)
 }
 
 // Called by the tester to ask the controller to change the
@@ -85,16 +92,61 @@ func (sck *ShardCtrler) InitConfig(cfg *shardcfg.ShardConfig) {
 func (sck *ShardCtrler) ChangeConfigTo(new *shardcfg.ShardConfig) {
 	// Your code here.
 
-	// push next config to remote
-	next, version0, err0 := sck.IKVClerk.Get(NEXT_CONFIG_KEY)
-	if err0 == rpc.ErrNoKey {
-		version0 = 0
-	}
-	// nextCfg := shardcfg.FromString(next)
+	for {
+		oldCfg, version0, err0 := sck.IKVClerk.Get(CONFIGURATION_KEY)
+		nextCfg, version1, err1 := sck.IKVClerk.Get(NEXT_CONFIG_KEY)
 
-	err1 := sck.IKVClerk.Put(NEXT_CONFIG_KEY, new.String(), version0)
-	_ = next
-	_ = err1
+		if err0 == rpc.ErrNoKey || err1 == rpc.ErrNoKey {
+			// should not happen
+			log.Fatalf("nextCfg or oldCfg not exist, which should not happen")
+		}
+
+		next, old := shardcfg.FromString(nextCfg), shardcfg.FromString(oldCfg)
+
+		if new.Num <= next.Num {
+			// already a config with a Num >= new.Num obtain next key, fail
+			return
+		}
+		// new.Num > nextCfg.Num
+		if nextCfg == oldCfg { // next config finish change
+			// try to obtain nextkey like lock lab
+			err2 := sck.IKVClerk.Put(NEXT_CONFIG_KEY, new.String(), version1)
+			switch err2 {
+			case rpc.OK:
+				// obtain lock successfully
+				sck.migrateTo(old, new, version0)
+			case rpc.ErrMaybe:
+				cfg, _, err3 := sck.IKVClerk.Get(NEXT_CONFIG_KEY)
+				if err3 == rpc.ErrNoKey {
+					log.Fatalf("nextCfg or oldCfg not exist, which should not happen")
+				}
+				if cfg == new.String() {
+					// obtain lock success
+					sck.migrateTo(old, new, version0)
+				}
+			}
+
+		} else { // wait for next config change finish
+			time.Sleep(10 * time.Millisecond)
+		}
+
+	}
+
+	// next, version0, err0 := sck.IKVClerk.Get(NEXT_CONFIG_KEY)
+
+	// if err0 == rpc.ErrNoKey {
+	// 	// version0 = 0
+	// 	log.Fatalf("nextCfg or oldCfg not exist, which should not happen")
+	// } else {
+	// 	nextCfg := shardcfg.FromString(next)
+	// 	if nextCfg.Num >= new.Num && next != new.String() {
+	// 		// there's already a config with a higher num obtain nextconfigkey
+	// 		return
+	// 	}
+	// }
+
+	// err1 := sck.IKVClerk.Put(NEXT_CONFIG_KEY, new.String(), version0)
+	// _ = err1
 	// switch err1 {
 
 	// case rpc.ErrMaybe:
@@ -106,8 +158,14 @@ func (sck *ShardCtrler) ChangeConfigTo(new *shardcfg.ShardConfig) {
 	// 	return
 	// }
 
-	cfgstr, version, _ := sck.IKVClerk.Get(CONFIGURATION_KEY)
-	old := shardcfg.FromString(cfgstr)
+	// cfgstr, version, _ := sck.IKVClerk.Get(CONFIGURATION_KEY)
+	// old := shardcfg.FromString(cfgstr)
+	// sck.migrateTo(old, new, version)
+
+	DPrintf("CTRL change config successfully %v", new.Num)
+}
+
+func (sck *ShardCtrler) migrateTo(old *shardcfg.ShardConfig, new *shardcfg.ShardConfig, version rpc.Tversion) {
 	DPrintf("CTRL change config from %+v to %+v", old, new)
 	var wg sync.WaitGroup
 	for shard0 := range shardcfg.NShards {
@@ -134,6 +192,7 @@ func (sck *ShardCtrler) ChangeConfigTo(new *shardcfg.ShardConfig) {
 		}(shard, old, new)
 	}
 	wg.Wait()
+
 	sck.IKVClerk.Put(CONFIGURATION_KEY, new.String(), version)
 	DPrintf("CTRL change config successfully %v", new.Num)
 }
